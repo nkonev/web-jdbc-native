@@ -16,18 +16,6 @@ repositories {
 	mavenCentral()
 }
 
-
-graalvmNative {
-    metadataRepository {
-        enabled = true
-    }
-}
-
-// https://graalvm.github.io/native-build-tools/latest/gradle-plugin.html#metadata-support
-sourceSets {
-    graal
-}
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -36,14 +24,7 @@ dependencies {
 	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
 	implementation 'org.liquibase:liquibase-core'
 	runtimeOnly 'org.postgresql:postgresql'
-    graalCompileOnly 'org.graalvm.nativeimage:svm:22.3.0'
-    graalCompileOnly 'org.graalvm.sdk:graal-sdk:22.3.0'
-    nativeImageCompileOnly sourceSets.graal.output.classesDirs
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-configurations {
-    nativeImageClasspath.extendsFrom(graalImplementation)
 }
 
 tasks.withType(KotlinCompile) {
@@ -58,6 +39,8 @@ tasks.named('test') {
 }
 
 
-tasks.named("jar") {
-    from collectReachabilityMetadata
+tasks.named("bootBuildImage") {
+    // https://docs.spring.io/spring-boot/docs/3.0.0/gradle-plugin/reference/htmlsingle/
+    // https://github.com/paketo-buildpacks/java/releases
+    buildpacks = ["urn:cnb:builder:paketo-buildpacks/java@7.12.0"]
 }
