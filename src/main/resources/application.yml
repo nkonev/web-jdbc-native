@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    name: web_jdbc_ds
+    # https://jdbc.postgresql.org/documentation/head/connect.html#connection-parameters
+    url: jdbc:postgresql://127.0.0.1:37432/webjdbc?connectTimeout=10&socketTimeout=40&ApplicationName=web-jdbc-app
+    username: webjdbc
+    password: "webJdbcPazZw0rd"
+
+  liquibase:
+    change-log: classpath:/db/changelog.yml

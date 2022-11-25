@@ -1,0 +1,25 @@
+# This file used for both developer and demo purposes.
+# It contains environment
+version: '3.7'
+
+services:
+
+  postgresql:
+    image: postgres:14.1-alpine3.14
+    restart: unless-stopped
+    ports:
+      - 37432:5432
+    volumes:
+      - ./docker/postgresql_dev/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:z
+      - postgres_data:/var/lib/postgresql/data:z
+    environment:
+      - POSTGRES_PASSWORD=postgresqlPassword
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "1"
+
+
+volumes:
+  postgres_data:

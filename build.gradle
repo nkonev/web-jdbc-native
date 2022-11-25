@@ -1,0 +1,63 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+	id 'org.springframework.boot' version '3.0.0'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id 'org.graalvm.buildtools.native' version '0.9.18'
+	id 'org.jetbrains.kotlin.jvm' version '1.7.21'
+	id 'org.jetbrains.kotlin.plugin.spring' version '1.7.21'
+}
+
+group = 'name.nkonev.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+
+graalvmNative {
+    metadataRepository {
+        enabled = true
+    }
+}
+
+// https://graalvm.github.io/native-build-tools/latest/gradle-plugin.html#metadata-support
+sourceSets {
+    graal
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+	implementation 'org.jetbrains.kotlin:kotlin-reflect'
+	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+	implementation 'org.liquibase:liquibase-core'
+	runtimeOnly 'org.postgresql:postgresql'
+    graalCompileOnly 'org.graalvm.nativeimage:svm:22.3.0'
+    graalCompileOnly 'org.graalvm.sdk:graal-sdk:22.3.0'
+    nativeImageCompileOnly sourceSets.graal.output.classesDirs
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+configurations {
+    nativeImageClasspath.extendsFrom(graalImplementation)
+}
+
+tasks.withType(KotlinCompile) {
+	kotlinOptions {
+		freeCompilerArgs = ['-Xjsr305=strict']
+		jvmTarget = '17'
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+
+tasks.named("jar") {
+    from collectReachabilityMetadata
+}
