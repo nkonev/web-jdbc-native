@@ -1,30 +1,17 @@
 package name.nkonev.example.webjdbcnative
 
 import org.slf4j.LoggerFactory
-import org.springframework.aot.hint.RuntimeHints
-import org.springframework.aot.hint.RuntimeHintsRegistrar
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.context.annotation.ImportRuntimeHints
 import org.springframework.stereotype.Component
 
-@ImportRuntimeHints(LiquibaseRuntimeHints::class)
 @SpringBootApplication
 class WebJdbcNativeApplication()
 
 fun main(args: Array<String>) {
 	runApplication<WebJdbcNativeApplication>(*args)
-}
-
-class LiquibaseRuntimeHints : RuntimeHintsRegistrar {
-
-    override fun registerHints(hints: RuntimeHints, classLoader: ClassLoader?) {
-        hints.resources().registerPattern("db/changelog/*.sql")
-        hints.resources().registerPattern("db/changelog.yml")
-    }
-
 }
 
 @Component

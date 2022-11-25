@@ -16,16 +16,11 @@ repositories {
 	mavenCentral()
 }
 
-
+// https://graalvm.github.io/native-build-tools/latest/gradle-plugin.html#metadata-support
 graalvmNative {
     metadataRepository {
         enabled = true
     }
-}
-
-// https://graalvm.github.io/native-build-tools/latest/gradle-plugin.html#metadata-support
-sourceSets {
-    graal
 }
 
 dependencies {
@@ -34,16 +29,9 @@ dependencies {
 	implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
 	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-	implementation 'org.liquibase:liquibase-core'
-	runtimeOnly 'org.postgresql:postgresql'
-    graalCompileOnly 'org.graalvm.nativeimage:svm:22.3.0'
-    graalCompileOnly 'org.graalvm.sdk:graal-sdk:22.3.0'
-    nativeImageCompileOnly sourceSets.graal.output.classesDirs
+    implementation 'org.flywaydb:flyway-core'
+    runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-configurations {
-    nativeImageClasspath.extendsFrom(graalImplementation)
 }
 
 tasks.withType(KotlinCompile) {
@@ -55,9 +43,4 @@ tasks.withType(KotlinCompile) {
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
-
-
-tasks.named("jar") {
-    from collectReachabilityMetadata
 }
