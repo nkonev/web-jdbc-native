@@ -41,6 +41,10 @@ tasks.named('test') {
 
 tasks.named("bootBuildImage") {
     // https://docs.spring.io/spring-boot/docs/3.0.0/gradle-plugin/reference/htmlsingle/
+
+    // https://hub.docker.com/r/paketobuildpacks/builder/tags
+    builder = "paketobuildpacks/builder:0.3.111-base"
+
     // https://github.com/paketo-buildpacks/java/releases
     buildpacks = ["urn:cnb:builder:paketo-buildpacks/java@7.12.0"]
 }
