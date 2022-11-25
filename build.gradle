@@ -42,9 +42,12 @@ tasks.named('test') {
 tasks.named("bootBuildImage") {
     // https://docs.spring.io/spring-boot/docs/3.0.0/gradle-plugin/reference/htmlsingle/
 
+    environment = ['BP_NATIVE_IMAGE': 'true']
+
     // https://hub.docker.com/r/paketobuildpacks/builder/tags
-    builder = "paketobuildpacks/builder:0.3.111-base"
+    // https://github.com/paketo-buildpacks/full-builder/releases
+    builder = "paketobuildpacks/builder:0.2.237-full"
 
     // https://github.com/paketo-buildpacks/java/releases
-    buildpacks = ["urn:cnb:builder:paketo-buildpacks/java@7.12.0"]
+    // buildpacks = ["urn:cnb:builder:paketo-buildpacks/native-image@5.7.0"]
 }
