@@ -16,13 +16,6 @@ repositories {
 	mavenCentral()
 }
 
-// https://graalvm.github.io/native-build-tools/latest/gradle-plugin.html#metadata-support
-graalvmNative {
-    metadataRepository {
-        enabled = true
-    }
-}
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -43,4 +36,10 @@ tasks.withType(KotlinCompile) {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.named("bootBuildImage") {
+    // https://docs.spring.io/spring-boot/docs/3.0.0/gradle-plugin/reference/htmlsingle/
+    // https://github.com/paketo-buildpacks/java/releases
+    buildpacks = ["urn:cnb:builder:paketo-buildpacks/java@7.12.0"]
 }
