@@ -1,14 +1,25 @@
 package name.nkonev.example.webjdbcnative
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
+import org.springframework.amqp.core.Queue
+import org.springframework.amqp.rabbit.annotation.RabbitListener
+import org.springframework.amqp.rabbit.connection.ConnectionFactory
+import org.springframework.amqp.rabbit.core.RabbitTemplate
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
+@EnableScheduling
 @SpringBootApplication
 class WebJdbcNativeApplication()
 
@@ -16,9 +27,36 @@ fun main(args: Array<String>) {
 	runApplication<WebJdbcNativeApplication>(*args)
 }
 
+const val queueName = "my-queue"
+
+@Configuration
+class RabbitMqConfig(private val objectMapper: ObjectMapper){
+    @Bean
+    fun createQueue() : Queue {
+        return Queue(queueName)
+    }
+
+    @Bean
+    fun rabbitTemplate(
+        connectionFactory: ConnectionFactory,
+        producerJackson2MessageConverter: Jackson2JsonMessageConverter
+    ): RabbitTemplate {
+        val rabbitTemplate = RabbitTemplate(connectionFactory)
+        rabbitTemplate.messageConverter = producerJackson2MessageConverter
+        return rabbitTemplate
+    }
+
+    @Bean
+    fun producerJackson2MessageConverter(): Jackson2JsonMessageConverter {
+        return Jackson2JsonMessageConverter(objectMapper)
+    }
+}
+
 @Component
 class AppRunner(private val subjectRepository: SubjectRepository,
-                private val branchRepository: BranchRepository) : ApplicationRunner {
+                private val branchRepository: BranchRepository,
+                private val rabbitTemplate: RabbitTemplate,
+) : ApplicationRunner {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -57,6 +95,16 @@ class AppRunner(private val subjectRepository: SubjectRepository,
         val allSubjects = subjectRepository.findAll()
         allSubjects.forEach { logger.info("Found subject {}", it) }
     }
+
+
+    @Scheduled(cron = "* * * * * *")
+    fun send() {
+        val allSubjects = subjectRepository.findAll()
+        allSubjects.forEach {
+            logger.info("Sending subject {}", it)
+            rabbitTemplate.convertAndSend(queueName, it)
+        }
+    }
 }
 
 @RestController
@@ -65,5 +113,17 @@ class MyController(private val subjectRepository: SubjectRepository) {
     @GetMapping("/subject")
     fun get() : Iterable<Subject> {
         return subjectRepository.findAll();
+    }
+}
+
+
+@Component
+class MyListener() {
+
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
+    @RabbitListener(queues = [queueName])
+    fun listen(subj: Subject) {
+        logger.info("Received subject {} over RabbitMQ", subj)
     }
 }

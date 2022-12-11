@@ -5,3 +5,7 @@ spring:
     url: jdbc:postgresql://127.0.0.1:37432/webjdbc?connectTimeout=10&socketTimeout=40&ApplicationName=web-jdbc-app
     username: webjdbc
     password: "webJdbcPazZw0rd"
+  rabbitmq:
+    addresses: 127.0.0.1:26672
+    username: webJdbc
+    password: webJdbcPazZw0rd
