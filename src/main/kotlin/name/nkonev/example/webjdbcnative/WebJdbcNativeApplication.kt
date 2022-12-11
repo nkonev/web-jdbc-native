@@ -13,9 +13,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.ProblemDetail
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -113,6 +115,19 @@ class MyController(private val subjectRepository: SubjectRepository) {
     @GetMapping("/subject")
     fun get() : Iterable<Subject> {
         return subjectRepository.findAll();
+    }
+
+    @GetMapping("/get-me-exception-please")
+    fun getErrorPlease() {
+        throw RuntimeException("Aaah!")
+    }
+
+    @ExceptionHandler
+    fun eh (e: Exception): ProblemDetail {
+        val bldr = ProblemDetail.forStatus(500)
+        bldr.detail = e.message
+        bldr.title = "Something bad has happened"
+        return bldr
     }
 }
 
