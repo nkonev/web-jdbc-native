@@ -6,6 +6,8 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.stereotype.Component
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RestController
 
 @SpringBootApplication
 class WebJdbcNativeApplication()
@@ -54,5 +56,14 @@ class AppRunner(private val subjectRepository: SubjectRepository,
         logger.info("Checking if subjects still presents")
         val allSubjects = subjectRepository.findAll()
         allSubjects.forEach { logger.info("Found subject {}", it) }
+    }
+}
+
+@RestController
+class MyController(private val subjectRepository: SubjectRepository) {
+
+    @GetMapping("/subject")
+    fun get() : Iterable<Subject> {
+        return subjectRepository.findAll();
     }
 }
