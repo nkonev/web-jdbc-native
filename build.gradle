@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id 'org.springframework.boot' version '3.0.0'
+	id 'org.springframework.boot' version '3.0.1'
 	id 'io.spring.dependency-management' version '1.1.0'
 	id 'org.graalvm.buildtools.native' version '0.9.18'
 	id 'org.jetbrains.kotlin.jvm' version '1.7.21'
@@ -14,13 +14,11 @@ sourceCompatibility = '17'
 
 repositories {
 	mavenCentral()
-    mavenLocal()
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework:spring-core:6.0.3-SNAPSHOT'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
@@ -44,11 +42,11 @@ tasks.named('test') {
 tasks.named("bootBuildImage") {
     // https://docs.spring.io/spring-boot/docs/3.0.0/gradle-plugin/reference/htmlsingle/
 
-    environment = ['BP_NATIVE_IMAGE': 'true']
+//    environment = ['BP_NATIVE_IMAGE': 'true']
 
     // https://hub.docker.com/r/paketobuildpacks/builder/tags
     // https://github.com/paketo-buildpacks/full-builder/releases
-    builder = "paketobuildpacks/builder:0.2.237-full"
+    builder = "paketobuildpacks/builder:0.2.268-full"
 
     // https://github.com/paketo-buildpacks/java/releases
     // buildpacks = ["urn:cnb:builder:paketo-buildpacks/native-image@5.7.0"]
