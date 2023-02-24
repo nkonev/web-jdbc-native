@@ -7,12 +7,15 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.amqp.rabbit.connection.ConnectionFactory
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
+import org.springframework.aot.hint.RuntimeHints
+import org.springframework.aot.hint.RuntimeHintsRegistrar
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.ImportRuntimeHints
 import org.springframework.http.ProblemDetail
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
+@ImportRuntimeHints(LiquibaseRuntimeHints::class)
 @EnableScheduling
 @SpringBootApplication
 class WebJdbcNativeApplication()
@@ -52,6 +56,15 @@ class RabbitMqConfig(private val objectMapper: ObjectMapper){
     fun producerJackson2MessageConverter(): Jackson2JsonMessageConverter {
         return Jackson2JsonMessageConverter(objectMapper)
     }
+}
+
+class LiquibaseRuntimeHints : RuntimeHintsRegistrar {
+
+    override fun registerHints(hints: RuntimeHints, classLoader: ClassLoader?) {
+        hints.resources().registerPattern("db/changelog/*.sql")
+        hints.resources().registerPattern("db/changelog.yml")
+    }
+
 }
 
 @Component
