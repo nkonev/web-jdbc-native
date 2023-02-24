@@ -9,3 +9,5 @@ spring:
     addresses: 127.0.0.1:26672
     username: webJdbc
     password: webJdbcPazZw0rd
+  liquibase:
+    change-log: classpath:/db/changelog.yml
