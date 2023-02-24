@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id 'org.springframework.boot' version '3.0.1'
+	id 'org.springframework.boot' version '3.0.3'
 	id 'io.spring.dependency-management' version '1.1.0'
-	id 'org.graalvm.buildtools.native' version '0.9.18'
-	id 'org.jetbrains.kotlin.jvm' version '1.7.21'
-	id 'org.jetbrains.kotlin.plugin.spring' version '1.7.21'
+	id 'org.graalvm.buildtools.native' version '0.9.20'
+	id 'org.jetbrains.kotlin.jvm' version '1.7.22'
+	id 'org.jetbrains.kotlin.plugin.spring' version '1.7.22'
 }
 
 group = 'name.nkonev.example'
@@ -40,14 +40,10 @@ tasks.named('test') {
 
 
 tasks.named("bootBuildImage") {
+    // https://docs.spring.io/spring-boot/docs/current/reference/html/native-image.html#native-image.testing
     // https://docs.spring.io/spring-boot/docs/3.0.0/gradle-plugin/reference/htmlsingle/
-
-    environment = ['BP_NATIVE_IMAGE': 'true']
 
     // https://hub.docker.com/r/paketobuildpacks/builder/tags
     // https://github.com/paketo-buildpacks/full-builder/releases
     builder = "paketobuildpacks/builder:0.2.237-full"
-
-    // https://github.com/paketo-buildpacks/java/releases
-    // buildpacks = ["urn:cnb:builder:paketo-buildpacks/native-image@5.7.0"]
 }
