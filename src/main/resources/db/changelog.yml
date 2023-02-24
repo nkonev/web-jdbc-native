@@ -1,8 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 1
-      author: nkonev
-
-      changes:
-        - sqlFile:
-            path: /db/changelog/1648380286__init.sql
