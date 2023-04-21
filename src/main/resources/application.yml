@@ -11,3 +11,9 @@ spring:
     password: webJdbcPazZw0rd
   liquibase:
     change-log: classpath:/db/changelog.yml
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.jdbc.core: TRACE

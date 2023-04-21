@@ -19,24 +19,6 @@ services:
       options:
         max-size: "50m"
         max-file: "1"
-  rabbitmq:
-    image: rabbitmq:3.9.22-management-alpine
-    hostname: rabbitmq
-    restart: unless-stopped
-    ports:
-      - 25672:15672
-      - 26672:5672
-    environment:
-      - RABBITMQ_DEFAULT_USER=webJdbc
-      - RABBITMQ_DEFAULT_PASS=webJdbcPazZw0rd
-    volumes:
-      - rabbitmq_data_dir:/var/lib/rabbitmq/mnesia:z
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"
-
 
 volumes:
   postgres_data:
-  rabbitmq_data_dir:

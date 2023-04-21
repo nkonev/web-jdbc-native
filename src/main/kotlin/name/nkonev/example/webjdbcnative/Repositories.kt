@@ -9,3 +9,6 @@ interface SubjectRepository : CrudRepository<Subject, Long>
 
 @Repository
 interface BranchRepository : CrudRepository<Branch, Long>
+
+@Repository
+interface BranchInfoRepository: CrudRepository<BranchInfo, Long>
