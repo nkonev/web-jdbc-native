@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 
 @ImportRuntimeHints(LiquibaseRuntimeHints::class)
 @EnableScheduling
@@ -47,14 +48,22 @@ class AppRunner(private val subjectRepository: SubjectRepository,
 
     override fun run(args: ApplicationArguments) {
         branchRepository.deleteAll()
-        subjectRepository.deleteAll()
+//        subjectRepository.deleteAll()
 
         logger.info("All records were deleted!")
 
 //        val subj1: Subject = subjectRepository.save(Subject(0, "Software Engineering", "Apply key aspects of software engineering processes for the development of a complex software system"))
 //        val subj2: Subject = subjectRepository.save(Subject(0, "Distributed System", "Explore recent advances in distributed computing systems"))
 //        val subj3: Subject = subjectRepository.save(Subject(0, "Business Analysis and Optimization", "understand the Internal and external factors that impact the business strategy"))
-        val branch1: Branch = Branch(0, "Computer Science and Engineering", "CSE", "CSE department offers courses under ambitious curricula in computer science and computer engineering..")
+        val branch1: Branch = Branch(
+            UUID(0, 0),
+            "Computer Science and Engineering",
+            "CSE",
+            "CSE department offers courses under ambitious curricula in computer science and computer engineering..",
+            mutableSetOf(),
+            null,
+            true
+        )
 //        branch1.addSubject(subj1)
 //        branch1.addSubject(subj2)
         val createdBranch1: Branch = branchRepository.save(branch1)
@@ -81,17 +90,17 @@ class AppRunner(private val subjectRepository: SubjectRepository,
 //        logger.info("Checking if subjects still presents")
 //        val allSubjects = subjectRepository.findAll()
 //        allSubjects.forEach { logger.info("Found subject {}", it) }
-        branchInfoRepository.save(BranchInfo(0, "a subj info", createdBranch1.branchId))
+//        branchInfoRepository.save(BranchInfo(0, "a subj info", createdBranch1.branchId))
 
         logger.info("Searching branch again")
-        val found = branchRepository.findByIdOrNull(createdBranch1.branchId)
+        val found = branchRepository.findByIdOrNull(createdBranch1.branchId!!)
         logger.info("Found first branch {}", found)
 
 
-        found!!.description = "New descr"
-        logger.info("Before saving")
-        branchRepository.save(found)
-        logger.info("After saving")
+//        found!!.description = "New descr"
+//        logger.info("Before saving")
+//        branchRepository.save(found)
+//        logger.info("After saving")
     }
 
 
