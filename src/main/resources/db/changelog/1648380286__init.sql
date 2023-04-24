@@ -3,9 +3,8 @@ CREATE TABLE BRANCH
     BRANCH_ID         UUID PRIMARY KEY,
     BRANCH_SHORT_NAME varchar(45)  NOT NULL,
     BRANCH_NAME       varchar(100) NOT NULL,
-    DESCRIPTION       varchar(200) DEFAULT NULL
--- ,
-   -- JSON_DATA JSON
+    DESCRIPTION       varchar(200) DEFAULT NULL,
+    JSON_DATA JSON
 );
 
 

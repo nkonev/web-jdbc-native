@@ -5,6 +5,7 @@ import org.springframework.data.annotation.PersistenceCreator
 import org.springframework.data.annotation.Transient
 import org.springframework.data.domain.Persistable
 import org.springframework.data.relational.core.mapping.Column
+import org.springframework.data.relational.core.mapping.Embedded
 import org.springframework.data.relational.core.mapping.MappedCollection
 import org.springframework.data.relational.core.mapping.Table
 import java.util.UUID
@@ -25,7 +26,7 @@ data class Branch(
     private val subjects: MutableSet<Subject> = HashSet(),
     @Column("branch_id")
     private var branchInfo: BranchInfo? = null,
-//    private var jsonData: List<Child>
+    private var jsonData: List<Child>,
     @Transient
     private val new: Boolean
 ): Persistable<UUID> {
@@ -55,6 +56,7 @@ data class Branch(
         description,
         mutableSetOf(),
         branchInfo,
+        emptyList(),
         false
     )
 }

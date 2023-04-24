@@ -62,6 +62,7 @@ class AppRunner(private val subjectRepository: SubjectRepository,
             "CSE department offers courses under ambitious curricula in computer science and computer engineering..",
             mutableSetOf(),
             null,
+            listOf(Child("ololow")),
             true
         )
 //        branch1.addSubject(subj1)
